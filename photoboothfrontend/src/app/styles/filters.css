@@ -1,0 +1,245 @@
+/* Filter classes for photobooth effects */
+
+.filter-none {
+  filter: none;
+}
+
+.filter-bw {
+  filter: grayscale(100%) contrast(110%);
+}
+
+.filter-sepia {
+  filter: sepia(100%) contrast(110%) saturate(110%);
+}
+
+.filter-duo {
+  filter: grayscale(100%) contrast(140%) brightness(110%);
+}
+
+.filter-pixel {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  filter: contrast(120%) brightness(110%);
+}
+
+/* Photobooth container styles */
+.photobooth-container {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: #000;
+}
+
+.photobooth-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* Mirror the preview */
+  transition: filter 0.3s ease;
+}
+
+.photobooth-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Flash effect overlay */
+.flash-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity 0.1s ease;
+}
+
+.flash-overlay.active {
+  opacity: 0.8;
+}
+
+/* Countdown overlay */
+.countdown-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* Gallery styles */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.gallery-item {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.gallery-item:hover {
+  transform: scale(1.05);
+}
+
+.gallery-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  padding: 8px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.gallery-item:hover .gallery-actions {
+  opacity: 1;
+}
+
+.gallery-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.gallery-btn:hover {
+  background: white;
+}
+
+/* Controls styles */
+.controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.controls-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.control-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.control-btn:hover {
+  background: #0056b3;
+}
+
+.control-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.control-btn.secondary {
+  background: #6c757d;
+}
+
+.control-btn.secondary:hover {
+  background: #545b62;
+}
+
+.control-select {
+  background: white;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.control-select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Privacy notice */
+.privacy-notice {
+  text-align: center;
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 20px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .photobooth-container {
+    width: 280px;
+    height: 280px;
+  }
+  
+  .controls-row {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .control-btn,
+  .control-select {
+    width: 100%;
+    max-width: 200px;
+  }
+}
