@@ -1,103 +1,135 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useRef } from 'react';
+import { useCamera } from './hooks/useCamera';
+import VideoPreview, { FilterType } from './components/VideoPreview';
+import Controls from './components/Controls';
+import Gallery from './components/Gallery';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [filter, setFilter] = useState<FilterType>('none');
+  const [images, setImages] = useState<string[]>([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const {
+    start: startCamera,
+    stop: stopCamera,
+    devices,
+    selectDevice,
+    activeDeviceId,
+    ready: isCameraReady,
+    error: cameraError
+  } = useCamera(videoRef);
+
+  const handleCaptured = (dataUrl: string) => {
+    setImages(prev => {
+      // Keep only the last 12 images
+      const newImages = [dataUrl, ...prev].slice(0, 12);
+      return newImages;
+    });
+  };
+
+  const handleClearGallery = () => {
+    setImages([]);
+  };
+
+  const handleInfo = () => {
+    // This will be handled by the Controls component
+  };
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      padding: '20px',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    }}>
+      <div style={{
+        maxWidth: '800px',
+        margin: '0 auto',
+        background: 'white',
+        borderRadius: '16px',
+        padding: '32px',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)'
+      }}>
+        {/* Header */}
+        <header style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <h1 style={{
+            fontSize: '32px',
+            fontWeight: '700',
+            color: '#333',
+            margin: '0 0 8px 0',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}>
+            📸 Photobooth
+          </h1>
+          <p style={{
+            fontSize: '16px',
+            color: '#6c757d',
+            margin: '0'
+          }}>
+            Take photos with your camera and apply fun filters
+          </p>
+        </header>
+
+        {/* Video Preview */}
+        <div style={{ marginBottom: '24px' }}>
+          <VideoPreview
+            videoRef={videoRef}
+            filter={filter}
+            onCaptured={handleCaptured}
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Controls */}
+        <Controls
+          onStart={startCamera}
+          onStop={stopCamera}
+          isCameraReady={isCameraReady}
+          isCameraActive={!!videoRef.current?.videoWidth}
+          devices={devices}
+          activeDeviceId={activeDeviceId}
+          onSelectDevice={selectDevice}
+          filter={filter}
+          setFilter={setFilter}
+          onClear={handleClearGallery}
+          hasImages={images.length > 0}
+          onInfo={handleInfo}
+        />
+
+        {/* Gallery */}
+        {images.length > 0 && (
+          <div style={{ marginTop: '32px' }}>
+            <Gallery images={images} />
+          </div>
+        )}
+
+        {/* Privacy Notice */}
+        <div className="privacy-notice">
+          <strong>Privacy Protected:</strong> Photos stay on your device. Use HTTPS for camera access.
+        </div>
+
+        {/* Camera Error Display */}
+        {cameraError && (
+          <div style={{
+            marginTop: '20px',
+            padding: '16px',
+            background: '#f8d7da',
+            border: '1px solid #f5c6cb',
+            borderRadius: '8px',
+            color: '#721c24'
+          }}>
+            <strong>Camera Error:</strong> {cameraError}
+            <br />
+            <small>
+              Make sure you've granted camera permissions and are using HTTPS.
+            </small>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
